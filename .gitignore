@@ -1,0 +1,43 @@
+# Build outputs
+build/
+bin/
+out/
+*.class
+
+# Gradle
+.gradle/
+gradle-app.setting
+!gradle/wrapper/gradle-wrapper.jar
+
+# Kotlin
+.kotlin/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.vs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Secrets / certs — don't commit these
+certs/
+*.jks
+*.p12
+*.pem
+*.key
+
+# Local machine-specific config
+local.properties
+
+# Compiled distributables (the .deb you have in build/compose/binaries)
+*.deb
+*.dmg
+*.msi
+*.exe

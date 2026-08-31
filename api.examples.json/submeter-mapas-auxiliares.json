@@ -1,0 +1,72 @@
+{
+  "ano": 2025,
+  "mes": 1,
+  "participantes": [
+    {
+      "nif_fundo": "5000000001",
+      "nome_fundo": "Fundo Exemplo",
+      "categoria_up": "Categoria A",
+      "nome": "João Manuel Silva",
+      "nif": "5001234567",
+      "dt_subscricao": "2025-01-15",
+      "valor_nominal_up": 1000,
+      "quantidade_up_subscritas": 50,
+      "valor_subscrito": 50000,
+      "valor_liquidado": 50000,
+      "valor_actual_up": 1050,
+      "nivel_risco": "Médio"
+    }
+  ],
+  "activosFinanceiros": {
+    "oicGeral": [
+      {
+        "nif_fundo": "5000000001",
+        "nome_fundo": "Fundo Exemplo",
+        "conta": "3210.10.001",
+        "descricao": "Obrigações do Estado",
+        "moeda": "AKZ",
+        "quantidade": 100,
+        "valor_de_mercado": 1500,
+        "valias": 500,
+        "valor": 150000,
+        "juro": 3000,
+        "total": 153000
+      }
+    ],
+    "indicador": {
+      "vlg": 980000,
+      "unidades_participacao_circulacao": 1000,
+      "valor_unitario_participacao": 980
+    }
+  },
+  "activosImobiliarios": {
+    "oicImobiliarios": [
+      {
+        "nif_fundo": "5000000001",
+        "nome_fundo": "Fundo Exemplo",
+        "numero_imovel": "IMOV-001",
+        "endereco": "Rua 12 de Julho, nº 45",
+        "localidade": "Luanda",
+        "nome_perito_1": "Carlos Mendes",
+        "nome_perito_2": "Ana Sousa",
+        "nome_perito_3": "Pedro António",
+        "dt_avaliacao": "2025-10-01",
+        "avaliacao_perito_1": 15000000,
+        "avaliacao_perito_2": 15000000,
+        "avaliacao_perito_3": 15000000,
+        "conta": "4110.10.001",
+        "descricao": "Imóvel Residencial",
+        "quantidade": 1,
+        "preco": 14000000,
+        "moeda": "AKZ",
+        "taxa_cambio": 1,
+        "valor_final_imovel": 15000000
+      }
+    ],
+    "indicador": {
+      "vlg": 45000000,
+      "unidades_participacao_circulacao": 500,
+      "valor_unitario_participacao": 90000
+    }
+  }
+}
