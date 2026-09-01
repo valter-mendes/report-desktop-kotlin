@@ -33,6 +33,13 @@ certs/
 *.pem
 *.key
 
+# ...except the public DigiCert intermediate the app bundles to talk to SIRA.
+# reporteshml.cmc.ao / reportes.cmc.ao don't send it during the TLS handshake,
+# so buildSiraTrustManager() needs it on the classpath. It's a public CA cert
+# (published at cacerts.digicert.com), not a secret — every build must have it.
+!src/main/resources/certs/
+!src/main/resources/certs/*.pem
+
 # Local machine-specific config
 local.properties
 

@@ -21,7 +21,13 @@ private const val CERT_FILE_PATH = "certs/digicert-global-g2-tls-rsa-sha256-2020
  */
 fun buildSiraTrustManager(): X509TrustManager {
     val defaultTrustManager = systemTrustManager()
-    val extraCert = loadExtraCaCertificate() ?: return defaultTrustManager
+    val extraCert = loadExtraCaCertificate() ?: run {
+        System.err.println(
+            "WARNING: $CERT_RESOURCE_PATH not found on the classpath or at ./$CERT_FILE_PATH — " +
+                "SIRA TLS calls will fail with \"unable to find valid certification path\" until it is bundled."
+        )
+        return defaultTrustManager
+    }
     val extraTrustManager = trustManagerFor(extraCert)
 
     return object : X509TrustManager {
