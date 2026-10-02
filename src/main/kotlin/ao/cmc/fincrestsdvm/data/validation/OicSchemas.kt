@@ -57,65 +57,6 @@ fun validateApuramentoTaxas(json: JsonObject): List<String> {
     return ctx.result()
 }
 
-// ---- Balancete (OIC) ----
-private val BALANCETE_GROUPS = listOf(
-    "activos", "passivos", "compensacaoActiva", "compensacaoPassiva",
-    "fundosProprios", "resultados", "fluxosDeCaixa"
-)
-
-private fun validateBalanceteItem(ctx: ValidationContext, path: List<String>, item: JsonObject) {
-    item.requireString(ctx, path, "num_conta")
-    item.requireString(ctx, path, "conta_principal")
-    item.requireString(ctx, path, "num_subconta")
-    item.requireString(ctx, path, "subconta")
-    item.requireString(ctx, path, "num_conta_movimento")
-    item.requireString(ctx, path, "nome_conta")
-    item.requireNumber(ctx, path, "debito")
-    item.requireNumber(ctx, path, "credito")
-    item.requireNumber(ctx, path, "saldo")
-}
-
-private fun validateBalanceteGroup(ctx: ValidationContext, json: JsonObject, group: String, minSize: Int) {
-    val array = json.requireArray(ctx, emptyList(), group, minSize = minSize)
-    array?.forEachIndexed { index, element ->
-        val path = listOf(group, index.toString())
-        val item = element.asObjectOrNull()
-        if (item == null) ctx.issue(path, "Deve ser um objecto.") else validateBalanceteItem(ctx, path, item)
-    }
-}
-
-fun validateBalanceteSubmit(json: JsonObject): List<String> {
-    val ctx = ValidationContext()
-    val ano = json.requireInt(ctx, emptyList(), "ano", min = 2000)
-    val mes = json.requireInt(ctx, emptyList(), "mes", min = 1, max = 12)
-    ctx.checkAnoMes(ano, mes)
-    json.requireNumber(ctx, emptyList(), "total_up")
-    BALANCETE_GROUPS.forEach { validateBalanceteGroup(ctx, json, it, minSize = 0) }
-    return ctx.result()
-}
-
-fun validateBalanceteUpdate(json: JsonObject): List<String> {
-    val ctx = ValidationContext()
-    val ano = json.requireInt(ctx, emptyList(), "ano", min = 2000)
-    val mes = json.requireInt(ctx, emptyList(), "mes", min = 1, max = 12)
-    ctx.checkAnoMes(ano, mes)
-
-    var hasAny = false
-    BALANCETE_GROUPS.forEach { group ->
-        val array = json.optionalArray(group)
-        if (array != null) {
-            if (array.isNotEmpty()) hasAny = true
-            array.forEachIndexed { index, element ->
-                val path = listOf(group, index.toString())
-                val item = element.asObjectOrNull()
-                if (item == null) ctx.issue(path, "Deve ser um objecto.") else validateBalanceteItem(ctx, path, item)
-            }
-        }
-    }
-    if (!hasAny) ctx.issue(listOf("activos"), "Inclua pelo menos um movimento num dos grupos contabilísticos.")
-    return ctx.result()
-}
-
 // ---- Mapa Auxiliar (OIC) ----
 private fun validateParticipante(ctx: ValidationContext, path: List<String>, item: JsonObject) {
     item.requireString(ctx, path, "nif_fundo")

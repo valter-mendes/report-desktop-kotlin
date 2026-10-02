@@ -12,6 +12,7 @@ import ao.cmc.fincrestsdvm.data.api.AuthApi
 import ao.cmc.fincrestsdvm.data.api.BalanceteApi
 import ao.cmc.fincrestsdvm.data.api.MapaAuxiliarApi
 import ao.cmc.fincrestsdvm.data.api.SiraApiClient
+import ao.cmc.fincrestsdvm.data.api.TipoSociedade
 import ao.cmc.fincrestsdvm.data.models.ApiResult
 import ao.cmc.fincrestsdvm.data.models.SiraUser
 
@@ -30,7 +31,9 @@ class AppViewModel {
     private val apiClient = SiraApiClient(settings, session, onSessionExpired = ::handleSessionExpired)
     private val authApi = AuthApi(apiClient)
     private val mapaAuxiliarApi = MapaAuxiliarApi(apiClient)
-    private val balanceteApi = BalanceteApi(apiClient)
+    /** This app is the SDVM client, so balancetes go to the SDVM endpoints. */
+    val tipoSociedade = TipoSociedade.SDVM
+    private val balanceteApi = BalanceteApi(apiClient, tipoSociedade)
     private val apuramentoTaxasApi = ApuramentoTaxasApi(apiClient)
     private val apuramentoTaxasAiApi = ApuramentoTaxasAiApi(apiClient)
 

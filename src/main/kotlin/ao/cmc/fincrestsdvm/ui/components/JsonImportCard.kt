@@ -51,7 +51,9 @@ fun JsonImportCard(
     submitting: Boolean,
     validate: (JsonObject) -> List<String>,
     onSubmit: (JsonObject) -> Unit,
-    excelParser: ((InputStream) -> JsonObject)? = null
+    excelParser: ((InputStream) -> JsonObject)? = null,
+    serverError: String? = null,
+    serverErrorDetails: List<String> = emptyList()
 ) {
     var raw by remember { mutableStateOf("") }
     var loadError by remember { mutableStateOf<String?>(null) }
@@ -107,6 +109,10 @@ fun JsonImportCard(
                 ValidationAlert(title = "Foram encontrados problemas no JSON", messages = errors, isError = true)
             } else if (isValid) {
                 ValidationAlert(title = "JSON válido e pronto a enviar.", messages = emptyList(), isError = false)
+            }
+
+            if (serverError != null && !submitting) {
+                ValidationAlert(title = "O SIRA recusou o envio: $serverError", messages = serverErrorDetails, isError = true)
             }
 
             Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {

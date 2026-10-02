@@ -29,6 +29,11 @@ class OicSectionState(
         private set
     var error by mutableStateOf<String?>(null)
         private set
+    /** Message and per-field details (SIRA's `erros`) of the last failed submit/update. */
+    var actionError by mutableStateOf<String?>(null)
+        private set
+    var errorDetails by mutableStateOf<List<String>>(emptyList())
+        private set
 
     suspend fun fetchByPeriod(ano: Int, periodo: Int, nif: String?): Boolean {
         loading = true
@@ -48,8 +53,14 @@ class OicSectionState(
     suspend fun submit(payload: JsonObject): Boolean {
         submitting = true
         error = null
+        actionError = null
+        errorDetails = emptyList()
         val result = submitCall(payload)
-        if (result is ApiResult.Err) error = result.error.mensagem
+        if (result is ApiResult.Err) {
+            error = result.error.mensagem
+            actionError = result.error.mensagem
+            errorDetails = result.error.detailLines(payload)
+        }
         submitting = false
         return result is ApiResult.Ok
     }
@@ -57,8 +68,14 @@ class OicSectionState(
     suspend fun update(payload: JsonObject): Boolean {
         updating = true
         error = null
+        actionError = null
+        errorDetails = emptyList()
         val result = updateCall(payload)
-        if (result is ApiResult.Err) error = result.error.mensagem
+        if (result is ApiResult.Err) {
+            error = result.error.mensagem
+            actionError = result.error.mensagem
+            errorDetails = result.error.detailLines(payload)
+        }
         updating = false
         return result is ApiResult.Ok
     }

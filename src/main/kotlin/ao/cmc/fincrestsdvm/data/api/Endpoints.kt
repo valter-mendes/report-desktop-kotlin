@@ -29,8 +29,18 @@ class ApuramentoTaxasApi(private val client: SiraApiClient) {
     }
 }
 
-class BalanceteApi(private val client: SiraApiClient) {
-    private val prefix = "/api/reportes/balancete"
+/**
+ * SDVM and SCVM balancetes share one payload shape but live under distinct
+ * endpoints, each guarded by its own permission — the OIC endpoint
+ * (/api/reportes/balancete) must not be used by either.
+ */
+enum class TipoSociedade(val path: String, val label: String) {
+    SDVM("sdvm", "SDVM"),
+    SCVM("scvm", "SCVM")
+}
+
+class BalanceteApi(private val client: SiraApiClient, tipo: TipoSociedade) {
+    private val prefix = "/api/reportes/balancete/${tipo.path}"
 
     suspend fun submit(payload: JsonObject): ApiResult<StatusResponse> =
         client.post<SiraEnvelope<StatusResponse>, JsonObject>(prefix, payload).unwrap()
@@ -38,8 +48,8 @@ class BalanceteApi(private val client: SiraApiClient) {
     suspend fun update(payload: JsonObject): ApiResult<StatusResponse> =
         client.post<SiraEnvelope<StatusResponse>, JsonObject>("$prefix/updateBalancete", payload).unwrap()
 
-    suspend fun getByPeriod(ano: Int, mes: Int, nifFundo: String?): ApiResult<SiraRecord> {
-        val path = if (!nifFundo.isNullOrBlank()) "$prefix/$ano/$mes/$nifFundo" else "$prefix/$ano/$mes"
+    suspend fun getByPeriod(ano: Int, mes: Int, nif: String?): ApiResult<SiraRecord> {
+        val path = if (!nif.isNullOrBlank()) "$prefix/$ano/$mes/$nif" else "$prefix/$ano/$mes"
         return client.get<SiraEnvelope<SiraRecord>>(path).unwrap()
     }
 }
